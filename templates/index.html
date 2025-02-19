@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Billing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Hotel Billing System</h1>
+        <h2>Hotel Name</h2>
+        <p>Hotel Address: XYZ Street, City, Country</p>
+
+        <form method="POST">
+            <label for="customer_name">Customer's Name:</label>
+            <input type="text" id="customer_name" name="customer_name" required><br><br>
+
+            <label for="room_type">Room Type:</label>
+            <select id="room_type" name="room_type" required>
+                <option value="Single">Single</option>
+                <option value="Double">Double</option>
+                <option value="Suite">Suite</option>
+            </select><br><br>
+
+            <label for="bill_amount">Bill Amount:</label>
+            <input type="number" id="bill_amount" name="bill_amount" required><br><br>
+
+            <input type="submit" value="Generate Bill">
+        </form>
+
+        {% if customer_name %}
+        <h3>Generated Bill</h3>
+        <p>Bill Number: {{ bill_number }}</p>
+        <p>Customer Name: {{ customer_name }}</p>
+        <p>Room Type: {{ room_type }}</p>
+        <p>Bill Amount: ₹{{ bill_amount }}</p>
+        <p>GST (6%): ₹{{ gst }}</p>
+        <p>Tax (6%): ₹{{ tax }}</p>
+        <p><strong>Total Amount: ₹{{ total_amount }}</strong></p>
+        
+        <p><a href="{{ url_for('static', filename='bills/' + pdf_filename.split('/')[-1]) }}" target="_blank">Download PDF Bill</a></p>
+        {% endif %}
+    </div>
+</body>
+</html>
