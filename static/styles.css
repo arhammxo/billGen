@@ -4,6 +4,7 @@
     --accent: #e74c3c;
     --light: #f8f9fa;
     --success: #27ae60;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .container {
@@ -19,18 +20,23 @@
 h1 {
     color: var(--primary);
     text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 2.25rem;
     font-weight: 700;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.025em;
+    line-height: 1.3;
+    text-rendering: optimizeLegibility;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 h2 {
     color: var(--secondary);
     text-align: center;
     margin-bottom: 2rem;
-    font-size: 1.5rem;
+    font-size: 1.375rem;
     font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.4;
 }
 
 form {
@@ -41,14 +47,34 @@ form {
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+.input-item {
+    flex: 1;
+    position: relative;
+    min-width: 250px;
+}
+
+/* Add label styling with bottom margin */
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+    color: var(--primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: -0.01em;
+    padding-left: 0.7rem;
+}
+
 input, select {
     width: 100%;
-    padding: 0.8rem 1.2rem;
+    padding: 0.9rem 1.3rem;
     border: 2px solid #e0e0e0;
-    border-radius: 0.5rem;
-    font-size: 1rem;
+    border-radius: 0.4rem;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
     background: white;
+    font-family: inherit;
+    letter-spacing: -0.015em;
 }
 
 input:focus, select:focus {
@@ -58,17 +84,11 @@ input:focus, select:focus {
 }
 
 .input-group {
-    width: 90%;
+    width: 95%;
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
     flex-wrap: wrap;
-}
-
-.input-item {
-    flex: 1;
-    position: relative;
-    min-width: 250px;
 }
 
 .submit-btn {
@@ -76,9 +96,9 @@ input:focus, select:focus {
     color: white;
     padding: 1rem 2rem;
     border: none;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    border-radius: 0.4rem;
+    font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
     width: 100%;
@@ -86,6 +106,8 @@ input:focus, select:focus {
     align-items: center;
     justify-content: center;
     gap: 0.8rem;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
 }
 
 .submit-btn:hover {
@@ -107,18 +129,23 @@ input:focus, select:focus {
     justify-content: space-between;
     padding: 0.8rem 0;
     border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+    color: #444;
+    letter-spacing: -0.01em;
 }
 
 .error {
     background: #f8d7da;
     color: #721c24;
     padding: 1rem;
-    border-radius: 0.5rem;
+    border-radius: 0.4rem;
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 0.8rem;
     border: 1px solid #f5c6cb;
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 .download-btn {
@@ -128,10 +155,12 @@ input:focus, select:focus {
     background: var(--success);
     color: white;
     padding: 0.8rem 1.5rem;
-    border-radius: 0.5rem;
+    border-radius: 0.4rem;
     text-decoration: none;
     margin-top: 1.5rem;
     transition: transform 0.2s ease;
+    font-weight: 500;
+    letter-spacing: -0.015em;
 }
 
 .download-btn:hover {
@@ -149,7 +178,7 @@ input[type="date"] {
 }
 
 .input-group.split {
-    gap: 3rem;
+    gap: 1.5rem;
     justify-content: flex-start;
 }
 
