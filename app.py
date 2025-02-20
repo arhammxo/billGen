@@ -6,6 +6,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from reportlab.lib import colors
+import csv  # Add this import at the top
 
 app = Flask(__name__)
 
@@ -159,6 +160,36 @@ def index():
         # Generate PDF file
         pdf_filename = f"static/bills/{bill_number}.pdf"
         generate_pdf(bill_data, pdf_filename)
+
+        # Add to CSV log
+        csv_file = 'bills.csv'
+        file_exists = os.path.isfile(csv_file)
+        
+        with open(csv_file, 'a', newline='') as f:
+            fieldnames = [
+                'BillNumber', 'CustomerName', 'RoomType', 'NumberOfRooms',
+                'CheckInDate', 'CheckOutDate', 'BaseAmount', 'GST',
+                'ServiceTax', 'TotalAmount', 'CorporateGST', 'Timestamp'
+            ]
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            
+            if not file_exists:
+                writer.writeheader()
+            
+            writer.writerow({
+                'BillNumber': bill_number,
+                'CustomerName': customer_name,
+                'RoomType': room_type,
+                'NumberOfRooms': number_of_rooms,
+                'CheckInDate': check_in,
+                'CheckOutDate': check_out,
+                'BaseAmount': bill_amount,
+                'GST': gst,
+                'ServiceTax': tax,
+                'TotalAmount': total_amount,
+                'CorporateGST': corporate_gst_number,
+                'Timestamp': datetime.datetime.now().isoformat()
+            })
 
         # Render the result on the page and send the link to the PDF
         return render_template("index.html", 
