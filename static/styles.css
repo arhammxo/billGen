@@ -42,7 +42,7 @@ form {
 }
 
 input, select {
-    width: 95%;
+    width: 100%;
     padding: 0.8rem 1.2rem;
     border: 2px solid #e0e0e0;
     border-radius: 0.5rem;
@@ -149,12 +149,18 @@ input[type="date"] {
 }
 
 .input-group.split {
-    gap: 2rem;
+    gap: 3rem;
+    justify-content: flex-start;
+}
+
+.input-group.split .input-item:last-child {
+    margin-left: auto;
 }
 
 .input-group.split .input-item {
-    flex: 1 1 45%;
+    flex: 1 1 30%;
     min-width: 200px;
+    max-width: 250px;
 }
 
 @media (max-width: 768px) {
