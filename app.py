@@ -278,4 +278,4 @@ if __name__ == "__main__":
     # Ensure the 'bills' directory exists
     if not os.path.exists('static/bills'):
         os.makedirs('static/bills')
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=False)
