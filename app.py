@@ -52,7 +52,7 @@ def generate_pdf(bill_data, filename):
     c.drawCentredString(width/2, height-130, "HOTEL RIZ VARANASI")  # Moved down
     c.setFont("Helvetica", 10)
     c.setFillColorRGB(0.4, 0.4, 0.4)
-    c.drawCentredString(width/2, height-150, "S-19/32, Nadesar, Chaukaghat, Varanasi, Uttar Pradesh 221002")  # Moved down
+    c.drawCentredString(width/2, height-150, "S-19/32, Nadesar, Chaukaghat, Varanasi, Uttar Pradesh 221002  MOBILE: 9794907109")  # Moved down
     
     # Bill Information Section (starting lower)
     y_position = height - 170  # Adjusted starting position
