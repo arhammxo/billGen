@@ -16,10 +16,47 @@
         </div>
 
         <form method="POST">
-            <div class="input-group">
+            <div class="input-group split">
                 <div class="input-item">
-                    <label for="customer_name"><i class="fas fa-user"></i> Customer Name</label>
-                    <input type="text" id="customer_name" name="customer_name" required placeholder="Enter customer name" value="{{ customer_name if customer_name else '' }}">
+                    <label for="guest_name"><i class="fas fa-user"></i> Guest Name</label>
+                    <input type="text" id="guest_name" name="guest_name" required placeholder="Enter guest name" value="{{ guest_name if guest_name else '' }}">
+                </div>
+                <div class="input-item">
+                    <label for="mobile"><i class="fas fa-phone"></i> Mobile</label>
+                    <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number" value="{{ mobile if mobile else '' }}">
+                </div>
+            </div>
+
+            <div class="input-group full-width">
+                <div class="input-item">
+                    <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
+                    <textarea id="address" name="address" required placeholder="Enter guest address" 
+                        >{{ address if address else '' }}</textarea>
+                </div>
+            </div>
+
+            <div class="input-group split">
+                <div class="input-item">
+                    <label for="room_number"><i class="fas fa-door-open"></i> Room Number</label>
+                    <input type="text" id="room_number" name="room_number" required placeholder="Enter room number" value="{{ room_number if room_number else '' }}">
+                </div>
+                <div class="input-item">
+                    <label for="number_of_guests"><i class="fas fa-users"></i> Number of Guests</label>
+                    <input type="number" id="number_of_guests" name="number_of_guests" required min="1" value="{{ number_of_guests if number_of_guests else '1' }}">
+                </div>
+            </div>
+
+            <div class="input-group split">
+                <div class="input-item">
+                    <label for="arrival"><i class="fas fa-calendar-check"></i> Arrival Date & Time</label>
+                    <input type="datetime-local" id="arrival" name="arrival" required value="{{ arrival if arrival else '' }}">
+                    <div id="dateError" class="error-message" style="display: none; color: red; margin-top: 5px;">
+                        Departure date/time cannot be before arrival
+                    </div>
+                </div>
+                <div class="input-item">
+                    <label for="departure"><i class="fas fa-calendar-times"></i> Departure Date & Time</label>
+                    <input type="datetime-local" id="departure" name="departure" required value="{{ departure if departure else '' }}">
                 </div>
             </div>
 
@@ -33,36 +70,19 @@
                     </select>
                 </div>
                 <div class="input-item">
-                    <label for="number_of_rooms"><i class="fas fa-door-open"></i> Rooms</label>
-                    <input type="number" id="number_of_rooms" name="number_of_rooms" required min="1" value="{{ number_of_rooms if number_of_rooms else '1' }}">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="input-item">
-                    <label for="bill_amount"><i class="fas fa-rupee-sign"></i> Bill Amount</label>
-                    <input type="number" id="bill_amount" name="bill_amount" required placeholder="Enter total amount" value="{{ bill_amount if bill_amount else '' }}">
+                    <label for="room_tariff"><i class="fas fa-rupee-sign"></i> Room Tariff</label>
+                    <input type="number" id="room_tariff" name="room_tariff" required placeholder="Per night tariff" value="{{ room_tariff if room_tariff else '' }}">
                 </div>
             </div>
 
             <div class="input-group split">
                 <div class="input-item">
-                    <label for="check_in"><i class="fas fa-calendar-check"></i> Check-In Date</label>
-                    <input type="date" id="check_in" name="check_in" required value="{{ check_in if check_in else '' }}" max="{{ today }}">
+                    <label for="total_amount"><i class="fas fa-calculator"></i> Total Amount</label>
+                    <input type="number" id="total_amount" name="total_amount" required placeholder="Total payable amount" value="{{ total_amount if total_amount else '' }}">
                 </div>
                 <div class="input-item">
-                    <label for="check_out"><i class="fas fa-calendar-times"></i> Check-Out Date</label>
-                    <input type="date" id="check_out" name="check_out" required value="{{ check_out if check_out else '' }}" max="{{ today }}">
-                    <div class="error" id="dateError" style="display: none; margin-top: 0.5rem;">
-                        <i class="fas fa-exclamation-triangle"></i> Check-out date cannot be before check-in date!
-                    </div>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <div class="input-item">
-                    <label for="corporate_gst"><i class="fas fa-building"></i> Corporate GSTIN (optional)</label>
-                    <input type="text" id="corporate_gst" name="corporate_gst" pattern="\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d[Z]{1}[A-Z\d]{1}" placeholder="GSTIN format: 07ABCDE1234F1Z5" value="{{ corporate_gst if corporate_gst else '' }}">
+                    <label for="advance_paid"><i class="fas fa-credit-card"></i> Advance Paid</label>
+                    <input type="number" id="advance_paid" name="advance_paid" required placeholder="Advance payment" value="{{ advance_paid if advance_paid else '0' }}">
                 </div>
             </div>
 
@@ -78,34 +98,37 @@
                 <span>Bill Number:</span> <strong>{{ bill_number }}</strong>
             </div>
             <div class="bill-detail">
-                <span>Customer Name:</span> <strong>{{ customer_name }}</strong>
+                <span>Guest Name:</span> <strong>{{ guest_name }}</strong>
+            </div>
+            <div class="bill-detail">
+                <span>Mobile Number:</span> <strong>{{ mobile }}</strong>
+            </div>
+            <div class="bill-detail">
+                <span>Address:</span> <strong>{{ address }}</strong>
+            </div>
+            <div class="bill-detail">
+                <span>Room Number:</span> <strong>{{ room_number }}</strong>
             </div>
             <div class="bill-detail">
                 <span>Room Type:</span> <strong>{{ room_type }}</strong>
             </div>
             <div class="bill-detail">
-                <span>Number of Rooms:</span> <strong>{{ number_of_rooms }}</strong>
+                <span>Number of Guests:</span> <strong>{{ number_of_guests }}</strong>
             </div>
             <div class="bill-detail">
-                <span>Check-In Date:</span> <strong>{{ check_in }}</strong>
+                <span>Arrival Date:</span> <strong>{{ arrival }}</strong>
             </div>
             <div class="bill-detail">
-                <span>Check-Out Date:</span> <strong>{{ check_out }}</strong>
+                <span>Departure Date:</span> <strong>{{ departure }}</strong>
             </div>
             <div class="bill-detail">
-                <span>Bill Amount:</span> <strong>₹{{ bill_amount }}</strong>
+                <span>Room Tariff:</span> <strong>₹{{ room_tariff }}</strong>
             </div>
             <div class="bill-detail">
-                <span>GST (6%):</span> <strong>₹{{ gst }}</strong>
+                <span>Amount before tax:</span> <strong>₹{{ total_amount }}</strong>
             </div>
             <div class="bill-detail">
-                <span>Tax (6%):</span> <strong>₹{{ tax }}</strong>
-            </div>
-            <div class="bill-detail">
-                <span>Corporate GSTIN:</span> <strong>{{ corporate_gst if corporate_gst else 'N/A' }}</strong>
-            </div>
-            <div class="bill-detail">
-                <span>Total Amount:</span> <strong>₹{{ total_amount }}</strong>
+                <span>Advance Paid:</span> <strong>₹{{ advance_paid }}</strong>
             </div>
             
             <a href="{{ url_for('static', filename='bills/' + pdf_filename.split('/')[-1]) }}" target="_blank" class="download-btn">
@@ -116,24 +139,25 @@
     </div>
 
     <script>
-        // Add date validation
-        const checkIn = document.getElementById('check_in');
-        const checkOut = document.getElementById('check_out');
+        // Update element references to match actual IDs
+        const arrival = document.getElementById('arrival');
+        const departure = document.getElementById('departure');
         const dateError = document.getElementById('dateError');
 
         function validateDates() {
-            const checkInDate = new Date(checkIn.value);
-            const checkOutDate = new Date(checkOut.value);
+            const arrivalDate = new Date(arrival.value);
+            const departureDate = new Date(departure.value);
             
-            if (checkOutDate < checkInDate) {
+            // Validate both date and time
+            if (departureDate <= arrivalDate) {
                 dateError.style.display = 'block';
             } else {
                 dateError.style.display = 'none';
             }
         }
 
-        checkIn.addEventListener('change', validateDates);
-        checkOut.addEventListener('change', validateDates);
+        arrival.addEventListener('change', validateDates);
+        departure.addEventListener('change', validateDates);
     </script>
 </body>
 </html>

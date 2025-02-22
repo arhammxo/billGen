@@ -21,79 +21,118 @@ def generate_pdf(bill_data, filename):
     c = canvas.Canvas(filename, pagesize=letter)
     width, height = letter
     
-    # Centered Logo at the top
+    # New header section
+    c.setFont("Helvetica", 10)
+    c.setFillColorRGB(0, 0, 0)
+    # Left-aligned GSTIN
+    c.drawString(50, height-40, f"GSTIN: 09AALP15013J1ZO")
+    # Centered "TAX INVOICE" with highlight
+    c.setFont("Helvetica", 10)
+    c.setFillColorRGB(0.8, 0, 0)  # Red color for highlight
+    c.drawCentredString(width/2, height-40, "TAX INVOICE")
+    # Right-aligned bill number
+    c.setFont("Helvetica", 10)
+    c.setFillColorRGB(0, 0, 0)
+    c.drawRightString(width-50, height-40, f"Bill No: {bill_data['bill_number'][-4:]}")
+
+    # Centered Logo at the top (moved down slightly)
     logo_path = "static/images/logo.png"
     if os.path.exists(logo_path):
         logo = ImageReader(logo_path)
         logo_width = 80
         logo_height = 80
-        # Center horizontally: (page width - logo width) / 2
-        c.drawImage(logo, (width-logo_width)/2, height-100, 
+        # Adjust logo position down by 40 pixels
+        c.drawImage(logo, (width-logo_width)/2, height-120, 
                    width=logo_width, height=logo_height, 
                    preserveAspectRatio=True, mask='auto')
 
     # Header Section below logo
     c.setFont("Helvetica-Bold", 16)
     c.setFillColorRGB(0, 0.2, 0.5)
-    c.drawCentredString(width/2, height-110, "HOTEL RIZ VARANASI")  # Moved down
+    c.drawCentredString(width/2, height-130, "HOTEL RIZ VARANASI")  # Moved down
     c.setFont("Helvetica", 10)
     c.setFillColorRGB(0.4, 0.4, 0.4)
-    c.drawCentredString(width/2, height-130, "S-19/32, Nadesar, Chaukaghat, Varanasi, Uttar Pradesh 221002")  # Moved down
+    c.drawCentredString(width/2, height-150, "S-19/32, Nadesar, Chaukaghat, Varanasi, Uttar Pradesh 221002")  # Moved down
     
     # Bill Information Section (starting lower)
     y_position = height - 170  # Adjusted starting position
     c.setFont("Helvetica-Bold", 12)
     c.setFillColorRGB(0, 0, 0)
-    c.drawString(50, y_position, "TAX INVOICE:")
-    c.line(50, y_position-2, 350, y_position-2)
     
-    # Bill Details Table
-    details = [
-        ("Bill Number:", bill_data['bill_number']),
-        ("Issue Date:", datetime.datetime.now().strftime("%d-%b-%Y")),
-        ("Customer Name:", bill_data['customer_name']),
+    # Updated bill details
+    # Group 1: Guest information
+    group1_details = [
+        ("Guest Name:", bill_data['guest_name']),
+        ("Address:", bill_data['address']),
+        ("Mobile:", bill_data['mobile']),
+        ("Number of Guests:", bill_data['number_of_guests']),
+        ("Room Number:", bill_data['room_number']),
         ("Room Type:", bill_data['room_type']),
-        ("Number of Rooms:", bill_data['number_of_rooms']),
-        ("Check-In Date:", bill_data['check_in']),
-        ("Check-Out Date:", bill_data['check_out']),
+        ("Bill Number:", bill_data['bill_number'])
     ]
     
-    for label, value in details:
+    # Group 2: Stay and payment details
+    group2_details = [
+        ("Issue Date:", datetime.datetime.now().strftime("%d-%b-%Y %H:%M")),
+        ("Arrival Date and Time:", bill_data['arrival']),
+        ("Departure Date and Time:", bill_data['departure']),
+        ("Room Tariff:", f"Rs. {bill_data['room_tariff']:.2f}/-"),
+        ("Total Days:", str((datetime.datetime.strptime(bill_data['departure'], '%d-%b-%Y %H:%M') - 
+                           datetime.datetime.strptime(bill_data['arrival'], '%d-%b-%Y %H:%M')).days + 1)),
+        ("Total Amount:", f"Rs. {bill_data['total_amount']:.2f}/-"),
+        ("CGST (6%):", f"Rs. {bill_data['cgst']:.2f}/-"),
+        ("SGST (6%):", f"Rs. {bill_data['sgst']:.2f}/-"),
+        ("Service Tax (5%):", f"Rs. {bill_data['service_tax']:.2f}/-"),
+        ("Amount Including Tax:", f"Rs. {bill_data['amount_including_tax']:.2f}/-"),
+        ("Advance:", f"Rs. {bill_data['advance_paid']:.2f}/-"),
+        ("Net Balance:", f"Rs. {bill_data['net_amount']:.2f}/-"),
+        ("Cash Received:", "")  # Blank field
+    ]
+    
+    # Draw group 1
+    for label, value in group1_details:
         y_position -= 20
         c.drawString(50, y_position, label)
         c.drawString(200, y_position, value)
-    
-    # Amount Breakdown
+
+    # Updated amount breakdown
     y_position -= 40
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, y_position, "Amount Details:")
     c.line(50, y_position-2, 350, y_position-2)
     
-    y_position -= 30
-    c.setFont("Helvetica", 10)
-    details = [
-        ("Base Amount", f"Rs. {bill_data['bill_amount']:.2f}/-"),
-        ("GST (6%)", f"Rs. {bill_data['gst']:.2f} /-"),
-        ("Service Tax (6%)", f"Rs. {bill_data['tax']:.2f}/-"),
-    ]
-    
-    for label, value in details:
-        c.drawString(50, y_position, label)
-        c.drawString(250, y_position, value)
+    # Draw group 2
+    for label, value in group2_details:
         y_position -= 20
+        c.drawString(50, y_position, label)
+        c.drawString(200, y_position, value)
+    
+    # Add space between groups
+    y_position -= 20
     
     # Total Amount
     y_position -= 20
     c.setFont("Helvetica-Bold", 12)
     c.setFillColorRGB(0.8, 0, 0)  # Red color
     c.drawString(50, y_position, "Total Amount Payable:")
-    c.drawString(250, y_position, f"Rs. {bill_data['total_amount']:.2f}/-")
+    c.drawString(250, y_position, f"Rs. {bill_data['net_amount']:.2f}/-")
     c.line(50, y_position-2, 350, y_position-2)
     
     # Footer
     c.setFont("Helvetica-Oblique", 8)
     c.setFillColorRGB(0.5, 0.5, 0.5)
-    c.drawCentredString(width/2, 50, "Thank you for choosing Hotel Riz! | For queries: contact@hotelriz.com")
+    
+    # Left-aligned E. & O.E. (moved up 10 points)
+    c.drawString(50, 120, "E. & O.E.")
+    
+    # Right-aligned hotel name (moved up 10 points)
+    c.drawRightString(width-50, 120, "For: HOTEL RIZ")
+    
+    # Bottom left customer signature (moved down 5 points)
+    c.drawString(50, 25, "Customer's Sign")
+    
+    # Bottom right authorized signature (moved down 5 points)
+    c.drawRightString(width-50, 25, "Auth. Signature")
     
     # Save PDF
     c.save()
@@ -102,74 +141,90 @@ def generate_pdf(bill_data, filename):
 def index():
     if request.method == "POST":
         # Retrieve the data from the form
-        customer_name = request.form["customer_name"]
+        guest_name = request.form["guest_name"]
+        address = request.form["address"]
+        mobile = request.form["mobile"]
+        number_of_guests = request.form["number_of_guests"]
+        room_number = request.form["room_number"]
+        arrival = request.form["arrival"]
+        departure = request.form["departure"]
         room_type = request.form["room_type"]
-        number_of_rooms = request.form["number_of_rooms"]
-        bill_amount = float(request.form["bill_amount"])
-        check_in = request.form["check_in"]
-        check_out = request.form["check_out"]
-        corporate_gst_number = request.form["corporate_gst"]
+        room_tariff = float(request.form["room_tariff"])
+        total_amount = float(request.form["total_amount"])
+        advance_paid = float(request.form["advance_paid"])
 
-        # Add date validation
+        # Date validation
         try:
-            check_in_date = datetime.datetime.strptime(check_in, '%Y-%m-%d').date()
-            check_out_date = datetime.datetime.strptime(check_out, '%Y-%m-%d').date()
-            today = datetime.date.today()
+            arrival_date = datetime.datetime.strptime(arrival, '%Y-%m-%dT%H:%M')
+            departure_date = datetime.datetime.strptime(departure, '%Y-%m-%dT%H:%M')
+            today = datetime.datetime.now()
             
-            if check_in_date > today or check_out_date > today:
+            if arrival_date > today or departure_date > today:
                 raise ValueError("Dates cannot be in the future")
-            if check_out_date <= check_in_date:
-                raise ValueError("Check-out date must be after check-in date")
+            if departure_date <= arrival_date:
+                raise ValueError("Departure date must be after arrival date")
                 
         except ValueError as e:
             return render_template("index.html",
                                 error=str(e),
-                                customer_name=request.form["customer_name"],
+                                guest_name=request.form["guest_name"],
+                                address=request.form["address"],
+                                mobile=request.form["mobile"],
+                                number_of_guests=request.form["number_of_guests"],
+                                room_number=request.form["room_number"],
+                                arrival=arrival,
+                                departure=departure,
                                 room_type=request.form["room_type"],
-                                number_of_rooms=request.form["number_of_rooms"],
-                                bill_amount=request.form["bill_amount"],
-                                check_in=check_in,
-                                check_out=check_out,
-                                corporate_gst=request.form["corporate_gst"],
-                                pdf_filename=None,
-                                today=today.isoformat())
+                                room_tariff=request.form["room_tariff"],
+                                total_amount=request.form["total_amount"],
+                                advance_paid=request.form["advance_paid"],
+                                pdf_filename=None)
 
         # Generate unique bill number
-        bill_number = generate_bill_number(customer_name)
+        bill_number = generate_bill_number(guest_name)
 
-        # Perform GST and Tax Calculation
-        gst = bill_amount * 0.06
-        tax = bill_amount * 0.06
-        total_amount = bill_amount + gst + tax
+        # Calculate taxes
+        cgst = total_amount * 0.06  # 6% CGST
+        sgst = total_amount * 0.06  # 6% SGST
+        service_tax = total_amount * 0.05  # 5% Service Tax
+        amount_including_tax = total_amount + cgst + sgst + service_tax
+        net_amount = amount_including_tax - advance_paid
 
-        # Data to be passed to the PDF generation function
+        # Data for PDF generation
         bill_data = {
             "bill_number": bill_number,
-            "customer_name": customer_name,
+            "guest_name": guest_name,
+            "address": address,
+            "mobile": mobile,
+            "room_number": room_number,
+            "number_of_guests": number_of_guests,
+            "arrival": arrival_date.strftime('%d-%b-%Y %H:%M'),
+            "departure": departure_date.strftime('%d-%b-%Y %H:%M'),
             "room_type": room_type,
-            "number_of_rooms": number_of_rooms,
-            "check_in": check_in,
-            "check_out": check_out,
-            "bill_amount": bill_amount,
-            "gst": gst,
-            "tax": tax,
-            "corporate_gst": corporate_gst_number,
-            "total_amount": total_amount
+            "room_tariff": room_tariff,
+            "total_amount": total_amount,
+            "cgst": cgst,
+            "sgst": sgst,
+            "service_tax": service_tax,
+            "amount_including_tax": amount_including_tax,
+            "advance_paid": advance_paid,
+            "net_amount": net_amount
         }
 
         # Generate PDF file
         pdf_filename = f"static/bills/{bill_number}.pdf"
         generate_pdf(bill_data, pdf_filename)
 
-        # Add to CSV log
+        # CSV logging updates
         csv_file = 'bills.csv'
         file_exists = os.path.isfile(csv_file)
         
         with open(csv_file, 'a', newline='') as f:
             fieldnames = [
-                'BillNumber', 'CustomerName', 'RoomType', 'NumberOfRooms',
-                'CheckInDate', 'CheckOutDate', 'BaseAmount', 'GST',
-                'ServiceTax', 'TotalAmount', 'CorporateGST', 'Timestamp'
+                'BillNumber', 'GuestName', 'Mobile', 'Address',
+                'RoomNumber', 'NumberOfGuests', 'Arrival', 'Departure',
+                'RoomType', 'RoomTariff', 'TotalAmount', 'CGST', 
+                'SGST', 'ServiceTax', 'AmountIncludingTax', 'AdvancePaid', 'NetAmount', 'Timestamp'
             ]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             
@@ -178,38 +233,49 @@ def index():
             
             writer.writerow({
                 'BillNumber': bill_number,
-                'CustomerName': customer_name,
+                'GuestName': guest_name,
+                'Mobile': mobile,
+                'Address': address,
+                'RoomNumber': room_number,
+                'NumberOfGuests': number_of_guests,
+                'Arrival': arrival,
+                'Departure': departure,
                 'RoomType': room_type,
-                'NumberOfRooms': number_of_rooms,
-                'CheckInDate': check_in,
-                'CheckOutDate': check_out,
-                'BaseAmount': bill_amount,
-                'GST': gst,
-                'ServiceTax': tax,
+                'RoomTariff': room_tariff,
                 'TotalAmount': total_amount,
-                'CorporateGST': corporate_gst_number,
+                'CGST': cgst,
+                'SGST': sgst,
+                'ServiceTax': service_tax,
+                'AmountIncludingTax': amount_including_tax,
+                'AdvancePaid': advance_paid,
+                'NetAmount': net_amount,
                 'Timestamp': datetime.datetime.now().isoformat()
             })
 
-        # Render the result on the page and send the link to the PDF
         return render_template("index.html", 
-                               customer_name=customer_name,
+                               guest_name=guest_name,
+                               address=address,
+                               mobile=mobile,
+                               number_of_guests=number_of_guests,
+                               room_number=room_number,
+                               arrival=arrival,
+                               departure=departure,
                                room_type=room_type,
-                               number_of_rooms=number_of_rooms,
-                               bill_amount=bill_amount,
-                               gst=gst,
-                               tax=tax,
+                               room_tariff=room_tariff,
                                total_amount=total_amount,
-                               check_in=check_in,
-                               check_out=check_out,
+                               advance_paid=advance_paid,
+                               cgst=cgst,
+                               sgst=sgst,
+                               service_tax=service_tax,
+                               amount_including_tax=amount_including_tax,
+                               net_amount=net_amount,
                                bill_number=bill_number,
-                               pdf_filename=pdf_filename,
-                               today=today.isoformat())
+                               pdf_filename=pdf_filename)
 
-    return render_template("index.html", customer_name=None, today=datetime.date.today().isoformat())
+    return render_template("index.html")
 
 if __name__ == "__main__":
     # Ensure the 'bills' directory exists
     if not os.path.exists('static/bills'):
         os.makedirs('static/bills')
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)

@@ -192,6 +192,16 @@ input[type="date"] {
     max-width: 250px;
 }
 
+.input-group.full-width .input-item {
+    min-width: 100%;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+    min-width: calc(105%);
+}
+
 @media (max-width: 768px) {
     .container {
         width: 95%;
