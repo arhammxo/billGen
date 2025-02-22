@@ -71,14 +71,14 @@ def generate_pdf(bill_data, filename):
         ("Bill Number:", bill_data['bill_number'])
     ]
     
-    # Group 2: Stay and payment details
+    # Group 2: Stay and payment details with formatted dates
     group2_details = [
-        ("Issue Date:", datetime.datetime.now().strftime("%d-%b-%Y %H:%M")),
+        ("Issue Date:", datetime.datetime.now().strftime("%d %b %Y, %I:%M %p")),
         ("Arrival Date and Time:", bill_data['arrival']),
         ("Departure Date and Time:", bill_data['departure']),
         ("Room Tariff:", f"Rs. {bill_data['room_tariff']:.2f}/-"),
-        ("Total Days:", str((datetime.datetime.strptime(bill_data['departure'], '%d-%b-%Y %H:%M') - 
-                           datetime.datetime.strptime(bill_data['arrival'], '%d-%b-%Y %H:%M')).days + 1)),
+        ("Total Days:", str((datetime.datetime.strptime(bill_data['departure'], '%d %b %Y, %I:%M %p') - 
+                           datetime.datetime.strptime(bill_data['arrival'], '%d %b %Y, %I:%M %p')).days + 1)),
         ("Total Amount:", f"Rs. {bill_data['total_amount']:.2f}/-"),
         ("CGST (6%):", f"Rs. {bill_data['cgst']:.2f}/-"),
         ("SGST (6%):", f"Rs. {bill_data['sgst']:.2f}/-"),
@@ -190,7 +190,7 @@ def index():
         amount_including_tax = total_amount + cgst + sgst + service_tax
         net_amount = amount_including_tax - advance_paid
 
-        # Data for PDF generation
+        # Data for PDF generation with formatted dates
         bill_data = {
             "bill_number": bill_number,
             "guest_name": guest_name,
@@ -198,8 +198,8 @@ def index():
             "mobile": mobile,
             "room_number": room_number,
             "number_of_guests": number_of_guests,
-            "arrival": arrival_date.strftime('%d-%b-%Y %H:%M'),
-            "departure": departure_date.strftime('%d-%b-%Y %H:%M'),
+            "arrival": arrival_date.strftime('%d %b %Y, %I:%M %p'),
+            "departure": departure_date.strftime('%d %b %Y, %I:%M %p'),
             "room_type": room_type,
             "room_tariff": room_tariff,
             "total_amount": total_amount,
@@ -258,8 +258,8 @@ def index():
                                mobile=mobile,
                                number_of_guests=number_of_guests,
                                room_number=room_number,
-                               arrival=arrival,
-                               departure=departure,
+                               arrival=bill_data['arrival'],
+                               departure=bill_data['departure'],
                                room_type=room_type,
                                room_tariff=room_tariff,
                                total_amount=total_amount,

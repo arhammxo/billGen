@@ -116,10 +116,14 @@
                 <span>Number of Guests:</span> <strong>{{ number_of_guests }}</strong>
             </div>
             <div class="bill-detail">
-                <span>Arrival Date:</span> <strong>{{ arrival }}</strong>
+                <span>Arrival Date:</span> 
+                <strong>{{ arrival.split(', ')[0] }}<br>
+                <small>{{ arrival.split(', ')[1] }}</small></strong>
             </div>
             <div class="bill-detail">
-                <span>Departure Date:</span> <strong>{{ departure }}</strong>
+                <span>Departure Date:</span> 
+                <strong>{{ departure.split(', ')[0] }}<br>
+                <small>{{ departure.split(', ')[1] }}</small></strong>
             </div>
             <div class="bill-detail">
                 <span>Room Tariff:</span> <strong>₹{{ room_tariff }}</strong>
