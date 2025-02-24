@@ -67,8 +67,7 @@ def generate_pdf(bill_data, filename):
         ("Mobile:", bill_data['mobile']),
         ("Number of Guests:", bill_data['number_of_guests']),
         ("Room Number:", bill_data['room_number']),
-        ("Room Type:", bill_data['room_type']),
-        ("Bill Number:", bill_data['bill_number'])
+        ("Room Type:", bill_data['room_type'])
     ]
     
     # Group 2: Stay and payment details with formatted dates
@@ -82,7 +81,6 @@ def generate_pdf(bill_data, filename):
         ("Total Amount:", f"Rs. {bill_data['total_amount']:.2f}/-"),
         ("CGST (6%):", f"Rs. {bill_data['cgst']:.2f}/-"),
         ("SGST (6%):", f"Rs. {bill_data['sgst']:.2f}/-"),
-        ("Service Tax (5%):", f"Rs. {bill_data['service_tax']:.2f}/-"),
         ("Amount Including Tax:", f"Rs. {bill_data['amount_including_tax']:.2f}/-"),
         ("Advance:", f"Rs. {bill_data['advance_paid']:.2f}/-"),
         ("Net Balance:", f"Rs. {bill_data['net_amount']:.2f}/-"),
@@ -186,8 +184,7 @@ def index():
         # Calculate taxes
         cgst = total_amount * 0.06  # 6% CGST
         sgst = total_amount * 0.06  # 6% SGST
-        service_tax = total_amount * 0.05  # 5% Service Tax
-        amount_including_tax = total_amount + cgst + sgst + service_tax
+        amount_including_tax = total_amount + cgst + sgst
         net_amount = amount_including_tax - advance_paid
 
         # Data for PDF generation with formatted dates
@@ -205,7 +202,6 @@ def index():
             "total_amount": total_amount,
             "cgst": cgst,
             "sgst": sgst,
-            "service_tax": service_tax,
             "amount_including_tax": amount_including_tax,
             "advance_paid": advance_paid,
             "net_amount": net_amount
@@ -224,7 +220,7 @@ def index():
                 'BillNumber', 'GuestName', 'Mobile', 'Address',
                 'RoomNumber', 'NumberOfGuests', 'Arrival', 'Departure',
                 'RoomType', 'RoomTariff', 'TotalAmount', 'CGST', 
-                'SGST', 'ServiceTax', 'AmountIncludingTax', 'AdvancePaid', 'NetAmount', 'Timestamp'
+                'SGST', 'AmountIncludingTax', 'AdvancePaid', 'NetAmount', 'Timestamp'
             ]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             
@@ -245,7 +241,6 @@ def index():
                 'TotalAmount': total_amount,
                 'CGST': cgst,
                 'SGST': sgst,
-                'ServiceTax': service_tax,
                 'AmountIncludingTax': amount_including_tax,
                 'AdvancePaid': advance_paid,
                 'NetAmount': net_amount,
@@ -266,7 +261,6 @@ def index():
                                advance_paid=advance_paid,
                                cgst=cgst,
                                sgst=sgst,
-                               service_tax=service_tax,
                                amount_including_tax=amount_including_tax,
                                net_amount=net_amount,
                                bill_number=bill_number,
